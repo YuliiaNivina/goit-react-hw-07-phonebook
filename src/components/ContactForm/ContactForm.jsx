@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/contactSlice';
+import { addContact } from 'redux/operations';
 import { getContacts } from 'redux/selectors';
-import { nanoid } from 'nanoid';
 import css from './ContactForm.module.css';
 
 const ContactForm = () => {
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
 
   const dispatch = useDispatch();
   const contacts = useSelector(getContacts);
@@ -18,8 +17,8 @@ const ContactForm = () => {
       case 'name':
         setName(value);
         break;
-      case 'number':
-        setNumber(value);
+      case 'phone':
+        setPhone(value);
         break;
       default:
         return;
@@ -29,26 +28,20 @@ const ContactForm = () => {
   const handleSubmit = evt => {
     evt.preventDefault();
 
-    const contact = {
-      id: nanoid(),
-      name: name,
-      number: number,
-    };
-
     const existingContact = contacts.find(
       contact =>
         contact.name.toLowerCase() === name.toLowerCase() ||
-        contact.number === number
+        contact.phone === phone
     );
 
     if (existingContact) {
-      alert(`${name} or ${number} is already in contacts.`);
+      alert(`${name} or ${phone} is already in contacts.`);
       return;
     }
 
-    dispatch(addContact(contact));
+    dispatch(addContact({ name, phone }));
     setName('');
-    setNumber('');
+    setPhone('');
   };
 
   return (
@@ -71,11 +64,11 @@ const ContactForm = () => {
         <input
           className={css.contactInput}
           type="tel"
-          name="number"
+          name="phone"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
-          value={number}
+          value={phone}
           onChange={handleChange}
         />
       </label>

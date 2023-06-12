@@ -1,7 +1,7 @@
 import ContactListItem from 'components/ContactListItem/ContactListItem';
 import { useDispatch, useSelector } from 'react-redux';
+import { deleteContact } from 'redux/operations';
 import { getContacts, getFilter } from 'redux/selectors';
-import { deleteContact } from 'redux/contactSlice';
 import css from './ContactList.module.css';
 
 const ContactList = () => {
@@ -21,11 +21,11 @@ const ContactList = () => {
 
   return (
     <ul className={css.contactList}>
-      {contactsAfterFiter.map(({ id, name, number }) => (
+      {contactsAfterFiter.map(({ id, name, phone }) => (
         <ContactListItem
           key={id}
           name={name}
-          number={number}
+          phone={phone}
           onDeleteContact={() => dispatch(deleteContact(id))}
         />
       ))}
